@@ -1,0 +1,41 @@
+apply plugin: 'maven'
+
+version = '1.0.1'
+
+// 发布脚本
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            // 发布地址
+            repository(url: uri('../repo'))
+
+            pom.project {
+                name 'analysys-allgro-plugin'
+                groupId 'cn.com.analysys'
+                artifactId 'analysys-allgro-plugin'
+//                version '1.0.0'
+                packaging 'jar'
+                description 'analysys-allgro-plugin'
+                url 'https://github.com/analysys/ans-allgro-plugin'
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name 'analysys'
+                        email 'analysys@analysys.com.cn'
+                        url 'https://ark.analysys.cn'
+                    }
+                }
+                scm {
+                    connection 'https://github.com/analysys/ans-allgro-plugin'
+                    developerConnection 'https://github.com/analysys/ans-allgro-plugin'
+                    url 'https://github.com/analysys/ans-allgro-plugin'
+                }
+            }
+        }
+    }
+}
