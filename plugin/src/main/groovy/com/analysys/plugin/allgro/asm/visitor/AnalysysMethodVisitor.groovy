@@ -126,10 +126,10 @@ class AnalysysMethodVisitor extends AdviceAdapter {
                 if (methodCell.mOwner) {
                     methodCell.hookLambdaMethod(mv, isStaticMethod, paramStart, lambdaTypes, [clickAnn])
                 } else if (methodCell.mDesc == '(Landroid/view/MenuItem;)Z') {
-                    mv.visitVarInsn(ALOAD, 0)
-                    mv.visitVarInsn(ALOAD, AnalysysMethodCell.getVisitPosition(lambdaTypes, paramStart, isStaticMethod))
-                    mv.visitInsn(clickAnn)
-                    mv.visitMethodInsn(INVOKESTATIC, AnalysysHookConfig.ASM_PROBE_HELP, methodCell.mAgentName, methodCell.mAgentDesc, false)
+//                    mv.visitVarInsn(ALOAD, 0)
+//                    mv.visitVarInsn(ALOAD, AnalysysMethodCell.getVisitPosition(lambdaTypes, paramStart, isStaticMethod))
+//                    mv.visitInsn(clickAnn)
+//                    mv.visitMethodInsn(INVOKESTATIC, AnalysysHookConfig.ASM_PROBE_HELP, methodCell.mAgentName, methodCell.mAgentDesc, false)
                 }
                 return
             }
@@ -159,16 +159,18 @@ class AnalysysMethodVisitor extends AdviceAdapter {
                 if (mNameDesc == 'onDrawerOpened(Landroid/view/View;)V'
                         || mNameDesc == 'onDrawerClosed(Landroid/view/View;)V') {
                     // DrawerLayout
-                    mv.visitVarInsn(ALOAD, 1)
-                    mv.visitInsn(mNameDesc.contains('Opened') ? ICONST_1 : ICONST_0)
-                    mv.visitInsn(clickAnn)
-                    mv.visitMethodInsn(INVOKESTATIC, AnalysysHookConfig.ASM_PROBE_HELP, 'trackDrawerSwitch', '(Landroid/view/View;ZZ)V', false)
+//                    mv.visitVarInsn(ALOAD, 1)
+//                    mv.visitInsn(mNameDesc.contains('Opened') ? ICONST_1 : ICONST_0)
+//                    mv.visitInsn(clickAnn)
+
+//                    mv.visitMethodInsn(INVOKESTATIC, AnalysysHookConfig.ASM_PROBE_HELP, 'trackDrawerSwitch', '(Landroid/view/View;ZZ)V', false)
+
                 } else if (ClassChecker.mExtension.checkXMLOnClick && mDesc.startsWith('(Landroid/view/View;)')) {
                     // 检测是否是XML中绑定的点击
-                    methodVisitor.visitVarInsn(ALOAD, 1)
-                    mv.visitLdcInsn(mName)
-                    mv.visitInsn(clickAnn)
-                    mv.visitMethodInsn(INVOKEVIRTUAL, AnalysysHookConfig.ASM_PROBE_HELP, 'maybeClickInXML', '(Landroid/view/View;Ljava/lang/String;Z)V', false)
+//                    methodVisitor.visitVarInsn(ALOAD, 1)
+//                    mv.visitLdcInsn(mName)
+//                    mv.visitInsn(clickAnn)
+//                    mv.visitMethodInsn(INVOKEVIRTUAL, AnalysysHookConfig.ASM_PROBE_HELP, 'maybeClickInXML', '(Landroid/view/View;Ljava/lang/String;Z)V', false)
                 }
             }
         }
