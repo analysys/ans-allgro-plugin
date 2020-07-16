@@ -89,3 +89,5 @@ lint/tmp/
 repo/
 */.DS_Store
 .DS_Store
+
+.idea/*

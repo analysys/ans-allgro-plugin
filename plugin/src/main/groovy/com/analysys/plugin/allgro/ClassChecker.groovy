@@ -24,7 +24,8 @@ class ClassChecker {
                                                    'androidx',
                                                    'android.arch',
                                                    'com.google.android',
-                                                   'com.bumptech.glide.manager.SupportRequestManagerFragment']
+                                                   'com.bumptech.glide.manager.SupportRequestManagerFragment',
+                                                   'com.unionpay']
 
 
     private static final String ANALYSYS_API = 'com.analysys.AnalysysAgent.class'

@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 
 
-version = '1.0.2'
+version = '1.1.1'
 
 
 def maven_artifactId = "analysys-allgro-plugin"
@@ -22,6 +22,28 @@ uploadArchives {
                 groupId maven_groupId
                 artifactId maven_artifactId
                 packaging 'aar'
+
+                url 'https://github.com/analysys/ans-allgro-plugin'
+                description maven_artifactId
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name 'analysys'
+                        email 'analysys@analysys.com.cn'
+                        url 'https://ark.analysys.cn'
+                    }
+                }
+
+                scm {
+                    connection 'https://github.com/analysys/ans-allgro-plugin'
+                    developerConnection 'https://github.com/analysys/ans-allgro-plugin'
+                    url 'https://github.com/analysys/ans-allgro-plugin'
+                }
             }
         }
     }

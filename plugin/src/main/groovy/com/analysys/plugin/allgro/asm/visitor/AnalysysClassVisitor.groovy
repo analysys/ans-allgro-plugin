@@ -57,7 +57,6 @@ class AnalysysClassVisitor extends ClassVisitor implements Opcodes {
         mClassName = name
         mSuperName = superName
         mInterfaces = interfaces
-        super.visit(version, access, name, signature, superName, interfaces)
         isFragmentClass = ClassChecker.isFragment(mSuperName)
         if (isFragmentClass) {
             mFragmentMethods.putAll(AnalysysHookConfig.PV_METHODS)

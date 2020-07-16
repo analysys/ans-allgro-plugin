@@ -65,6 +65,13 @@ class AnalysysHookConfig {
                 'trackViewOnClick',
                 '(Landroid/view/View;Z)V'))
         CLICK_HOOK.add(new AnalysysMethodCell(
+                'Landroid/view/View$AccessibilityDelegate;',
+                'sendAccessibilityEvent',
+                '(Landroid/view/View;I)V',
+                1, [Opcodes.ALOAD, Opcodes.ILOAD],
+                'trackSendAccessibilityEvent',
+                '(Landroid/view/View;IZ)V'))
+        CLICK_HOOK.add(new AnalysysMethodCell(
                 'Landroid/widget/CompoundButton$OnCheckedChangeListener;',
                 'onCheckedChanged',
                 '(Landroid/widget/CompoundButton;Z)V',

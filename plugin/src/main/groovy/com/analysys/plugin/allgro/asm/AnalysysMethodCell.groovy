@@ -1,7 +1,7 @@
 package com.analysys.plugin.allgro.asm
 
-
 import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -78,11 +78,24 @@ class AnalysysMethodCell implements Opcodes {
     }
 
     void hookMethod(MethodVisitor mv, List<Integer> agentOpcodeExt) {
+        Label l0 = new Label()
+        Label l1 = new Label()
+        Label l2 = new Label()
+        mv.visitTryCatchBlock(l0, l1, l2, "java/lang/Throwable")
+        mv.visitLabel(l0)
+
         String owner = AnalysysHookConfig.ASM_PROBE_HELP
         mv.visitMethodInsn(INVOKESTATIC, owner, "getInstance", "()L${owner};", false)
         List<Integer> agentOpcodes = new ArrayList<>(mOpcodes)
         agentOpcodes.addAll(agentOpcodeExt)
         visitMethodWithLoadedParams(mv, INVOKEVIRTUAL, owner, mAgentName, mAgentDesc, mParamsStart, agentOpcodes)
+
+        mv.visitLabel(l1)
+        Label l3 = new Label()
+        mv.visitJumpInsn(Opcodes.GOTO, l3)
+        mv.visitLabel(l2)
+        mv.visitVarInsn(Opcodes.ASTORE, 1)
+        mv.visitLabel(l3)
 
 //        mv.visitMethodInsn(INVOKESTATIC, owner, "getInstance", "()L${owner};", false)
 //        mv.visitVarInsn(ALOAD, 0)
@@ -105,6 +118,12 @@ class AnalysysMethodCell implements Opcodes {
 
 
     void hookLambdaMethod(MethodVisitor mv, boolean isStaticMethod, int paramStart, Type[] lambdaTypes, List<Integer> agentOpcodeExt) {
+        Label l0 = new Label()
+        Label l1 = new Label()
+        Label l2 = new Label()
+        mv.visitTryCatchBlock(l0, l1, l2, "java/lang/Throwable")
+        mv.visitLabel(l0)
+
         String owner = AnalysysHookConfig.ASM_PROBE_HELP
         mv.visitMethodInsn(INVOKESTATIC, owner, "getInstance", "()L${owner};", false)
         for (int i = paramStart; i < paramStart + mOpcodes.size(); i++) {
@@ -114,6 +133,13 @@ class AnalysysMethodCell implements Opcodes {
             mv.visitInsn(agentOpcodeExt[i])
         }
         mv.visitMethodInsn(INVOKEVIRTUAL, owner, mAgentName, mAgentDesc, false)
+
+        mv.visitLabel(l1)
+        Label l3 = new Label()
+        mv.visitJumpInsn(Opcodes.GOTO, l3)
+        mv.visitLabel(l2)
+        mv.visitInsn(POP);
+        mv.visitLabel(l3)
     }
 
     /**

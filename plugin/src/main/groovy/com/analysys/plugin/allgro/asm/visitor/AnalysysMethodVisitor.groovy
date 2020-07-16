@@ -99,11 +99,23 @@ class AnalysysMethodVisitor extends AdviceAdapter {
         return super.visitAnnotation(s, b)
     }
 
+    private static final Map<Integer, int[]> RET_OPT_CODE = new HashMap<>()
+    static {
+        RET_OPT_CODE.put(IRETURN, [ISTORE,ILOAD])
+        RET_OPT_CODE.put(LRETURN, [LSTORE,LLOAD])
+        RET_OPT_CODE.put(FRETURN, [FSTORE,FLOAD])
+        RET_OPT_CODE.put(DRETURN, [DSTORE,DLOAD])
+        RET_OPT_CODE.put(ARETURN, [ASTORE,ALOAD])
+        RET_OPT_CODE.put(RETURN, null)
+    }
 
     @Override
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode)
-
+        if (!RET_OPT_CODE.containsKey(opcode)) {
+            return
+        }
+        int[] retOptCode = RET_OPT_CODE.get(opcode)
         if (ClassChecker.mExtension.lambdaEnabled) {
             AnalysysMethodCell methodCell = mCv.mLambdaMethodCells.get(mNameDesc)
             if (methodCell != null) {
@@ -124,7 +136,15 @@ class AnalysysMethodVisitor extends AdviceAdapter {
                 }
                 boolean isStaticMethod = ClassChecker.isStatic(mAccess)
                 if (methodCell.mOwner) {
+                    int nl = -1
+                    if (retOptCode != null) {
+                        nl = nextLocal
+                        mv.visitVarInsn(retOptCode[0], nl)
+                    }
                     methodCell.hookLambdaMethod(mv, isStaticMethod, paramStart, lambdaTypes, [clickAnn])
+                    if (retOptCode != null) {
+                        mv.visitVarInsn(retOptCode[1], nl)
+                    }
                 } else if (methodCell.mDesc == '(Landroid/view/MenuItem;)Z') {
 //                    mv.visitVarInsn(ALOAD, 0)
 //                    mv.visitVarInsn(ALOAD, AnalysysMethodCell.getVisitPosition(lambdaTypes, paramStart, isStaticMethod))
@@ -145,7 +165,15 @@ class AnalysysMethodVisitor extends AdviceAdapter {
             if (methodCell != null) {
                 mCv.mFragmentMethods.remove(mNameDesc)
                 def pvAnn = mCv.hasTrackPvAnn ? ICONST_1 : ICONST_0
+                int nl = -1
+                if (retOptCode != null) {
+                    nl = nextLocal
+                    mv.visitVarInsn(retOptCode[0], nl)
+                }
                 methodCell.hookMethod(mv, [pvAnn])
+                if (retOptCode != null) {
+                    mv.visitVarInsn(retOptCode[1], nl)
+                }
                 return
             }
         }
@@ -154,7 +182,15 @@ class AnalysysMethodVisitor extends AdviceAdapter {
             AnalysysMethodCell methodCell = AnalysysHookConfig.CLICK_METHODS.get(mNameDesc)
             def clickAnn = mCv.hasTrackClickAnnOnClass || hasTrackClickAnnOnMethod ? ICONST_1 : ICONST_0
             if (methodCell != null) {
+                int nl = -1
+                if (retOptCode != null) {
+                    nl = nextLocal
+                    mv.visitVarInsn(retOptCode[0], nl)
+                }
                 methodCell.hookMethod(mv, [clickAnn])
+                if (retOptCode != null) {
+                    mv.visitVarInsn(retOptCode[1], nl)
+                }
             } else {
                 if (mNameDesc == 'onDrawerOpened(Landroid/view/View;)V'
                         || mNameDesc == 'onDrawerClosed(Landroid/view/View;)V') {

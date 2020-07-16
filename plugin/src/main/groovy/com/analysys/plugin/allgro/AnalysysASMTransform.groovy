@@ -201,6 +201,7 @@ class AnalysysASMTransform extends Transform {
 
                         // 执行最原来这个jar元素的字节码修改
                         byte[] modifiedClassBytes = null
+
                         if (entryName.endsWith(".class")) {
                             // 匹配以.class结尾的jar元素
                             String classFullName = entryName.replace("/", ".")
@@ -211,6 +212,7 @@ class AnalysysASMTransform extends Transform {
                                 modifiedClassBytes = modifyClassBytes(sourceClassBytes, checker)
                             }
                         }
+
 
                         // 如果没有修改，就使用原来的元素
                         if (modifiedClassBytes == null) {
@@ -239,6 +241,8 @@ class AnalysysASMTransform extends Transform {
      * @return
      */
     static File modifyClassFile(File dir, File classFile, File tempDir) {
+
+
         File modified = null
         try {
             // 将path统一转换为命名空间方式
